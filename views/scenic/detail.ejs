@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %> - 红色文化学习打卡系统</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <a class="back-link" href="/scenic">← 返回景点列表</a>
+
+    <div class="detail-card">
+        <h2><%= spot.scenic_name %>
+            <% if (spot.check_count >= 10) { %>
+                <span class="badge badge-hot">🔥 热门</span>
+            <% } %>
+        </h2>
+        <p class="detail-meta">📍 <%= spot.location || '未填写地理位置' %> ｜ 总打卡次数 <%= spot.check_count %></p>
+
+        <section class="detail-section">
+            <h4>📖 景点描述</h4>
+            <p><%= spot.description || '暂无描述' %></p>
+        </section>
+
+        <section class="detail-section">
+            <h4>🔴 红色历史</h4>
+            <p><%= spot.red_history || '暂无红色历史记录' %></p>
+        </section>
+
+        <div class="detail-actions">
+            <a class="btn" href="/scenic/checkin/<%= spot.scenic_id %>">📍 立即打卡</a>
+            <span class="muted">你已在该景点打卡 <%= myCount %> 次</span>
+        </div>
+    </div>
+
+    <section>
+        <h3>🕒 最近打卡心得</h3>
+        <ul class="moment-list">
+            <% if (recent.length === 0) { %>
+                <li class="empty">还没有人打卡，做第一个吧！</li>
+            <% } %>
+            <% recent.forEach(function(r) { %>
+                <li>
+                    <strong><%= r.username %></strong>
+                    <span class="meta"><%= r.check_time %></span>
+                    <p><%= r.experience %></p>
+                </li>
+            <% }); %>
+        </ul>
+    </section>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

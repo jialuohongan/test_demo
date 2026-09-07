@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <a class="back-link" href="/checkin/my">← 返回我的打卡</a>
+
+    <div class="form-card">
+        <h2>✏ 修改打卡心得</h2>
+        <p class="muted">📍 <%= record.scenic_name %> ｜ 打卡时间 <%= record.check_time %></p>
+        <p class="muted">⚠ 按需求规定：仅允许修改心得，其他字段不可改</p>
+
+        <form method="post" action="/checkin/edit/<%= record.check_id %>">
+            <div class="form-row">
+                <label>打卡心得 *</label>
+                <textarea name="experience" rows="6" required><%= record.experience %></textarea>
+            </div>
+            <button class="btn" type="submit">保存修改</button>
+            <a class="btn btn-outline" href="/checkin/my">取消</a>
+        </form>
+    </div>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <div class="page-header">
+        <h2>👥 所有用户</h2>
+        <span class="muted">共 <%= list.length %> 人</span>
+    </div>
+
+    <form class="search-bar" method="get">
+        <input type="text" name="keyword" value="<%= query.keyword || '' %>" placeholder="按用户名搜索">
+        <input type="number" name="id" value="<%= query.id || '' %>" placeholder="按用户 ID">
+        <button class="btn">查询</button>
+        <a class="btn btn-outline" href="/admin/users">清空</a>
+    </form>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>用户 ID</th>
+                <th>用户名</th>
+                <th>学习积分</th>
+                <th>注册时间</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if (list.length === 0) { %>
+            <tr><td colspan="4" class="empty">无用户</td></tr>
+        <% } %>
+        <% list.forEach(function(u) { %>
+            <tr>
+                <td><%= u.user_id %></td>
+                <td>👤 <%= u.username %></td>
+                <td><strong><%= u.score %></strong></td>
+                <td><%= u.register_time || '-' %></td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

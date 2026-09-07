@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <h2>📢 系统公告</h2>
+
+    <form class="search-bar" method="get">
+        <input type="text" name="title" value="<%= query.title || '' %>" placeholder="按标题搜索">
+        <input type="number" name="id" value="<%= query.id || '' %>" placeholder="按编号">
+        <button class="btn">查询</button>
+        <a class="btn btn-outline" href="/announcement">清空</a>
+    </form>
+
+    <% if (list.length === 0) { %>
+        <p class="empty">暂无公告</p>
+    <% } %>
+
+    <% list.forEach(function(a) { %>
+        <div class="card">
+            <div class="card-head">
+                <h4>📌 <%= a.title %></h4>
+                <span class="meta">编号 #<%= a.announcement_id %> ｜ <%= a.publish_date || '未指定日期' %></span>
+            </div>
+            <p><%= a.content %></p>
+            <% if (a.remark) { %>
+                <p class="muted">📎 备注：<%= a.remark %></p>
+            <% } %>
+        </div>
+    <% }); %>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<nav class="navbar">
+    <div class="nav-inner container">
+        <a class="brand" href="/">
+            <span class="brand-red">🟥</span>
+            红色文化学习打卡
+        </a>
+        <% if (user) { %>
+            <ul class="nav-menu">
+                <li><a href="/scenic">景点</a></li>
+                <li><a href="/scenic/hot">热门排行</a></li>
+                <li><a href="/announcement">公告</a></li>
+                <li><a href="/checkin/my">我的打卡</a></li>
+            </ul>
+            <div class="nav-user">
+                <span class="score-badge">⭐ 积分 <%= user.score %></span>
+                <span class="username">👤 <%= user.username %></span>
+                <a class="btn btn-sm" href="/profile">个人信息</a>
+                <a class="btn btn-sm btn-outline" href="/logout">退出</a>
+            </div>
+        <% } else if (admin) { %>
+            <ul class="nav-menu">
+                <li><a href="/admin/dashboard">后台</a></li>
+                <li><a href="/admin/users">用户</a></li>
+                <li><a href="/scenic/admin/list">景点管理</a></li>
+                <li><a href="/announcement/admin/list">公告管理</a></li>
+            </ul>
+            <div class="nav-user">
+                <span class="role-badge">🛡 管理员</span>
+                <span class="username">👤 <%= admin.username %></span>
+                <a class="btn btn-sm btn-outline" href="/logout">退出</a>
+            </div>
+        <% } else { %>
+            <div class="nav-user">
+                <a class="btn btn-sm" href="/login">登录</a>
+                <a class="btn btn-sm btn-outline" href="/register">注册</a>
+            </div>
+        <% } %>
+    </div>
+</nav>

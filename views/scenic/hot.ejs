@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %> - 红色文化学习打卡系统</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <a class="back-link" href="/scenic">← 返回景点列表</a>
+
+    <div class="page-header">
+        <h2>🔥 热门景点排行榜</h2>
+        <span class="muted">规则：打卡次数 ≥ 10</span>
+    </div>
+
+    <% if (hot.length === 0) { %>
+        <p class="empty">暂无热门景点，再多打几个卡吧！</p>
+    <% } %>
+
+    <div class="rank-list">
+        <% hot.forEach(function(s, i) { %>
+            <div class="rank-card">
+                <div class="rank-no rank-no-<%= i + 1 %>"><%= i + 1 %></div>
+                <div class="rank-info">
+                    <h4><%= s.scenic_name %></h4>
+                    <p>📍 <%= s.location || '-' %></p>
+                    <p class="muted"><%= s.description || '暂无描述' %></p>
+                </div>
+                <div class="rank-count">
+                    <span class="big-num"><%= s.check_count %></span>
+                    <span class="muted">打卡次数</span>
+                </div>
+                <a class="btn" href="/scenic/detail/<%= s.scenic_id %>">查看详情</a>
+            </div>
+        <% }); %>
+    </div>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

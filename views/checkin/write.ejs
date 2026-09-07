@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <a class="back-link" href="/scenic/detail/<%= spot.scenic_id %>">← 返回景点详情</a>
+
+    <div class="form-card">
+        <h2>📍 在 <span class="hl"><%= spot.scenic_name %></span> 打卡</h2>
+        <p class="muted">写下你的红色文化学习心得（必填），打卡后学习积分+1。</p>
+
+        <form id="checkinForm">
+            <input type="hidden" name="scenic_id" value="<%= spot.scenic_id %>">
+            <div class="form-row">
+                <label>打卡心得 *</label>
+                <textarea name="experience" rows="6" placeholder="分享你的感悟..." required></textarea>
+            </div>
+            <button class="btn btn-block" type="submit">提交打卡</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+</div>
+
+<script>
+document.getElementById('checkinForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target));
+    const res = await fetch('/checkin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    const box = document.getElementById('result');
+    if (json.code === 200) {
+        box.innerHTML = `
+            <div class="flash flash-success">
+                ✅ ${json.msg} ｜ 当前积分：<strong>${json.data.new_score}</strong>
+                <p><a class="btn" href="/scenic/detail/${data.scenic_id}">回到景点</a>
+                   <a class="btn btn-outline" href="/checkin/my">查看我的打卡</a></p>
+            </div>`;
+        // 更新导航条积分
+        const scoreEl = document.querySelector('.score-badge');
+        if (scoreEl) scoreEl.textContent = '⭐ 积分 ' + json.data.new_score;
+    } else {
+        box.innerHTML = `<div class="flash flash-error">❌ ${json.msg}</div>`;
+    }
+});
+</script>
+
+<%- include('../_footer') %>
+</body>
+</html>

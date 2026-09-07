@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>注册 - 红色文化学习打卡系统</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body class="auth-bg">
+
+<div class="auth-box">
+    <h1><span class="brand-red">🟥</span> 注册新账号</h1>
+    <p class="auth-sub">注册即得学习积分 0 分</p>
+
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <form action="/register" method="post">
+        <div class="form-row">
+            <label>用户名（至少 3 位）</label>
+            <input type="text" name="username" placeholder="请输入用户名" required minlength="3">
+        </div>
+        <div class="form-row">
+            <label>密码（至少 6 位）</label>
+            <input type="password" name="password" placeholder="请输入密码" required minlength="6">
+        </div>
+        <div class="form-row">
+            <label>确认密码</label>
+            <input type="password" name="confirm" placeholder="再输一次" required>
+        </div>
+        <button class="btn btn-block" type="submit">注 册</button>
+    </form>
+
+    <p class="auth-link">
+        已有账号？<a href="/login">直接登录</a>
+    </p>
+</div>
+
+<%- include('_footer') %>
+</body>
+</html>

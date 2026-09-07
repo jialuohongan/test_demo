@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <h2>👤 个人信息</h2>
+
+    <div class="form-card">
+        <h3>基本信息</h3>
+        <p>账号：<strong><%= info.username %></strong></p>
+        <p>学习积分：<span class="big-num"><%= info.score %></span></p>
+        <p>注册时间：<%= info.register_time || '未知' %></p>
+    </div>
+
+    <div class="form-card">
+        <h3>修改用户名</h3>
+        <form method="post" action="/profile/username">
+            <div class="form-row">
+                <label>新用户名</label>
+                <input type="text" name="username" value="<%= info.username %>" minlength="3" required>
+            </div>
+            <button class="btn">更新用户名</button>
+        </form>
+    </div>
+
+    <div class="form-card">
+        <h3>修改密码</h3>
+        <form method="post" action="/profile/password">
+            <div class="form-row">
+                <label>原密码</label>
+                <input type="password" name="oldPwd" required>
+            </div>
+            <div class="form-row">
+                <label>新密码（≥ 6 位）</label>
+                <input type="password" name="newPwd" minlength="6" required>
+            </div>
+            <div class="form-row">
+                <label>确认新密码</label>
+                <input type="password" name="confirm" minlength="6" required>
+            </div>
+            <button class="btn">更新密码</button>
+        </form>
+    </div>
+
+    <div class="form-card">
+        <h3>退出登录</h3>
+        <p>你随时可以退出当前账号。</p>
+        <a class="btn btn-outline" href="/logout">退出登录</a>
+    </div>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

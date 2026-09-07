@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <div class="page-header">
+        <h2>📋 我的打卡记录</h2>
+        <span class="muted">共 <%= list.length %> 条</span>
+    </div>
+
+    <form class="search-bar" method="get">
+        <input type="text"   name="scenic_id" value="<%= query.scenic_id || '' %>" placeholder="按景点 ID">
+        <input type="text"   name="check_id"  value="<%= query.check_id  || '' %>" placeholder="按打卡 ID">
+        <select name="sort">
+            <option value="time_desc" <%= query.sort === 'time_desc' || !query.sort ? 'selected' : '' %>>最新优先</option>
+            <option value="time_asc"  <%= query.sort === 'time_asc'  ? 'selected' : '' %>>最早优先</option>
+        </select>
+        <button class="btn">筛选</button>
+        <a class="btn btn-outline" href="/checkin/my">清空</a>
+    </form>
+
+    <% if (list.length === 0) { %>
+        <p class="empty">还没有打卡记录，去<a href="/scenic">景点列表</a>找感兴趣的景点吧！</p>
+    <% } %>
+
+    <% list.forEach(function(r) { %>
+        <div class="card">
+            <div class="card-head">
+                <strong>🏞 <%= r.scenic_name %></strong>
+                <span class="meta"><%= r.check_time %></span>
+            </div>
+            <p>📍 <%= r.location %></p>
+            <p class="experience">💭 <%= r.experience %></p>
+            <div class="card-actions">
+                <a class="btn btn-sm" href="/checkin/edit/<%= r.check_id %>">✏ 修改心得</a>
+                <form method="post" action="/checkin/delete/<%= r.check_id %>" style="display:inline" onsubmit="return confirm('确定删除该打卡记录吗？你的学习积分将 -1');">
+                    <button class="btn btn-sm btn-danger" type="submit">🗑 删除</button>
+                </form>
+                <a class="btn btn-sm btn-outline" href="/scenic/detail/<%= r.scenic_id %>">查看景点</a>
+            </div>
+        </div>
+    <% }); %>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %> - 红色文化学习打卡系统</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <div class="page-header">
+        <h2>🏞 查看景点</h2>
+        <a class="btn btn-sm" href="/scenic/hot">🔥 查看热门排行</a>
+    </div>
+
+    <form class="search-bar" method="get">
+        <input type="text" name="name" value="<%= query.name || '' %>" placeholder="按景点名搜索">
+        <input type="number" name="id" value="<%= query.id || '' %>" placeholder="景点编号">
+        <button class="btn" type="submit">查询</button>
+        <a class="btn btn-outline" href="/scenic">清空</a>
+    </form>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>编号</th>
+                <th>景点名</th>
+                <th>地理位置</th>
+                <th>打卡次数</th>
+                <th>是否热门</th>
+                <th>我的打卡</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if (spots.length === 0) { %>
+            <tr><td colspan="7" class="empty">暂无景点</td></tr>
+        <% } %>
+        <% spots.forEach(function(s) { %>
+            <tr>
+                <td><%= s.scenic_id %></td>
+                <td><%= s.scenic_name %></td>
+                <td><%= s.location || '-' %></td>
+                <td><%= s.check_count %></td>
+                <td>
+                    <% if (s.check_count >= 10) { %>
+                        <span class="badge badge-hot">🔥 热门</span>
+                    <% } else { %>
+                        <span class="badge">普通</span>
+                    <% } %>
+                </td>
+                <td><%= s.userChecked %></td>
+                <td>
+                    <a class="btn btn-sm" href="/scenic/detail/<%= s.scenic_id %>">查看详情</a>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

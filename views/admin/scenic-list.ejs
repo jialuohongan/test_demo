@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <div class="page-header">
+        <h2>📍 景点管理</h2>
+        <a class="btn" href="/scenic/admin/add">+ 新增景点</a>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>景点名</th>
+                <th>地理位置</th>
+                <th>打卡次数</th>
+                <th>是否热门</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if (spots.length === 0) { %>
+            <tr><td colspan="6" class="empty">暂无景点</td></tr>
+        <% } %>
+        <% spots.forEach(function(s) { %>
+            <tr>
+                <td><%= s.scenic_id %></td>
+                <td><%= s.scenic_name %></td>
+                <td><%= s.location || '-' %></td>
+                <td><%= s.check_count %></td>
+                <td>
+                    <% if (s.check_count >= 10) { %>
+                        <span class="badge badge-hot">🔥 热门</span>
+                    <% } else { %>
+                        <span class="badge">普通</span>
+                    <% } %>
+                </td>
+                <td>
+                    <a class="btn btn-sm" href="/scenic/admin/edit/<%= s.scenic_id %>">编辑</a>
+                    <form method="post" action="/scenic/admin/delete/<%= s.scenic_id %>" style="display:inline" onsubmit="return confirm('确定删除景点「<%= s.scenic_name %>」?该景点的所有打卡记录也会一并删除');">
+                        <button class="btn btn-sm btn-danger" type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

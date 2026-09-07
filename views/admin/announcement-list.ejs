@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <div class="page-header">
+        <h2>📢 公告管理</h2>
+        <a class="btn" href="/announcement/admin/add">+ 发布公告</a>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>发布日期</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <% if (list.length === 0) { %>
+            <tr><td colspan="5" class="empty">暂无公告</td></tr>
+        <% } %>
+        <% list.forEach(function(a) { %>
+            <tr>
+                <td><%= a.announcement_id %></td>
+                <td>📌 <%= a.title %></td>
+                <td><%= a.publish_date || '-' %></td>
+                <td><%= a.remark || '-' %></td>
+                <td>
+                    <a class="btn btn-sm" href="/announcement/admin/edit/<%= a.announcement_id %>">编辑</a>
+                    <form method="post" action="/announcement/admin/delete/<%= a.announcement_id %>" style="display:inline" onsubmit="return confirm('确定删除该公告？');">
+                        <button class="btn btn-sm btn-danger" type="submit">删除</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

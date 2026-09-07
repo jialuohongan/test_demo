@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+<%- include('../_header') %>
+
+<div class="container">
+    <h2>🛡 管理员后台</h2>
+
+    <div class="stat-grid">
+        <div class="stat-card"><span class="big-num"><%= stats.users %></span><span>用户数</span></div>
+        <div class="stat-card"><span class="big-num"><%= stats.spots %></span><span>景点数</span></div>
+        <div class="stat-card"><span class="big-num"><%= stats.records %></span><span>打卡总数</span></div>
+        <div class="stat-card"><span class="big-num"><%= stats.announcements %></span><span>公告总数</span></div>
+        <div class="stat-card"><span class="big-num"><%= stats.hot %></span><span>热门景点数</span></div>
+    </div>
+
+    <div class="quick-actions">
+        <a class="btn" href="/scenic/admin/list">📍 景点管理</a>
+        <a class="btn" href="/announcement/admin/list">📢 公告管理</a>
+        <a class="btn" href="/admin/users">👥 查看用户</a>
+        <a class="btn btn-outline" href="/logout">🚪 退出登录</a>
+    </div>
+
+    <h3>Top 5 打卡景点</h3>
+    <table class="data-table">
+        <thead><tr><th>排名</th><th>景点名</th><th>打卡次数</th><th>操作</th></tr></thead>
+        <tbody>
+        <% if (topSpots.length === 0) { %>
+            <tr><td colspan="4" class="empty">暂无数据</td></tr>
+        <% } %>
+        <% topSpots.forEach(function(s, i) { %>
+            <tr>
+                <td><%= i + 1 %></td>
+                <td><%= s.scenic_name %></td>
+                <td><strong><%= s.check_count %></strong></td>
+                <td><a class="btn btn-sm" href="/scenic/admin/edit/<%= s.scenic_id %>">编辑</a></td>
+            </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('../_footer') %>
+</body>
+</html>

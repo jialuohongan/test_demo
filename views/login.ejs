@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 红色文化学习打卡系统</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body class="auth-bg">
+
+<div class="auth-box">
+    <h1><span class="brand-red">🟥</span> 红色文化学习打卡</h1>
+    <p class="auth-sub">请选择身份登录</p>
+
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <ul class="role-tabs">
+        <li class="active" data-role="user">用户登录</li>
+        <li data-role="admin">管理员登录</li>
+    </ul>
+
+    <form action="/login" method="post">
+        <input type="hidden" name="role" id="roleInput" value="user">
+        <div class="form-row">
+            <label>账号</label>
+            <input type="text" name="username" placeholder="用户名" required>
+        </div>
+        <div class="form-row">
+            <label>密码</label>
+            <input type="password" name="password" placeholder="密码" required>
+        </div>
+        <button class="btn btn-block" type="submit">登录</button>
+    </form>
+
+    <p class="auth-link">
+        没有账号？<a href="/register">立即注册</a>
+    </p>
+
+    <div class="auth-hint">
+        <p>📌 测试账号：</p>
+        <p>用户：test / 123456 ｜ 管理员：admin / 123456</p>
+    </div>
+</div>
+
+<script>
+    // 切换登录身份
+    document.querySelectorAll('.role-tabs li').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.role-tabs li').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('roleInput').value = tab.dataset.role;
+        });
+    });
+</script>
+
+<%- include('_footer') %>
+</body>
+</html>
