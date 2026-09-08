@@ -1,7 +1,7 @@
 /**
  * 路由：管理员后台
  * - 仪表盘：用户数/景点数/打卡总数/热门景点数
-
+ * - 查看所有用户
  */
 const express = require('express');
 const router = express.Router();
