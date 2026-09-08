@@ -31,6 +31,15 @@
                 <label>红色历史</label>
                 <textarea name="red_history" rows="5" placeholder="景点对应的红色历史事件、人物等"><%= spot ? (spot.red_history || '') : '' %></textarea>
             </div>
+            <div class="form-row">
+                <label>景点图片文件名</label>
+                <input type="text" name="image" value="<%= spot ? (spot.image || '') : '' %>" placeholder="例：zunyi.jpg（图片放在 public/images/scenic/ 目录下）">
+                <% if (spot && spot.image) { %>
+                    <div class="form-tip">
+                        当前图片：<img class="table-thumb" src="/public/images/scenic/<%= spot.image %>" alt="当前景点图片">
+                    </div>
+                <% } %>
+            </div>
             <button class="btn" type="submit">保存</button>
             <a class="btn btn-outline" href="/scenic/admin/list">取消</a>
         </form>

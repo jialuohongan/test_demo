@@ -80,10 +80,16 @@ router.get('/detail/:id', requireUser, async (req, res) => {
             'SELECT COUNT(*) AS cnt FROM check_in_record WHERE scenic_id = ? AND user_id = ?',
             [id, req.session.user.user_id]
         );
+        // 关联的革命人物
+        const heroes = await query(
+            'SELECT name, intro, image FROM hero_figure WHERE scenic_id = ? ORDER BY hero_id ASC',
+            [id]
+        );
         res.render('scenic/detail', {
             title: rows[0].scenic_name,
             spot: rows[0],
             recent,
+            heroes,
             myCount: myCount[0].cnt
         });
     } catch (err) {
@@ -113,14 +119,14 @@ router.get('/admin/add', requireAdmin, (req, res) => {
 });
 
 router.post('/admin/add', requireAdmin, async (req, res) => {
-    const { scenic_name, location, description, red_history } = req.body;
+    const { scenic_name, location, description, red_history, image } = req.body;
     if (!scenic_name) {
         req.session.flash = { type: 'error', msg: '景点名必填' };
         return res.redirect('/scenic/admin/add');
     }
     await query(
-        'INSERT INTO scenic_spot (scenic_name, location, description, red_history) VALUES (?, ?, ?, ?)',
-        [scenic_name, location, description, red_history]
+        'INSERT INTO scenic_spot (scenic_name, location, description, red_history, image) VALUES (?, ?, ?, ?, ?)',
+        [scenic_name, location, description, red_history, image || null]
     );
     req.session.flash = { type: 'success', msg: '景点已添加' };
     res.redirect('/scenic/admin/list');
@@ -134,10 +140,10 @@ router.get('/admin/edit/:id', requireAdmin, async (req, res) => {
 });
 
 router.post('/admin/edit/:id', requireAdmin, async (req, res) => {
-    const { scenic_name, location, description, red_history } = req.body;
+    const { scenic_name, location, description, red_history, image } = req.body;
     await query(
-        'UPDATE scenic_spot SET scenic_name=?, location=?, description=?, red_history=? WHERE scenic_id=?',
-        [scenic_name, location, description, red_history, req.params.id]
+        'UPDATE scenic_spot SET scenic_name=?, location=?, description=?, red_history=?, image=? WHERE scenic_id=?',
+        [scenic_name, location, description, red_history, image || null, req.params.id]
     );
     req.session.flash = { type: 'success', msg: '景点已更新' };
     res.redirect('/scenic/admin/list');

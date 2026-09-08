@@ -29,6 +29,7 @@
         <thead>
             <tr>
                 <th>编号</th>
+                <th>图片</th>
                 <th>景点名</th>
                 <th>地理位置</th>
                 <th>打卡次数</th>
@@ -39,11 +40,18 @@
         </thead>
         <tbody>
         <% if (spots.length === 0) { %>
-            <tr><td colspan="7" class="empty">暂无景点</td></tr>
+            <tr><td colspan="8" class="empty">暂无景点</td></tr>
         <% } %>
         <% spots.forEach(function(s) { %>
             <tr>
                 <td><%= s.scenic_id %></td>
+                <td>
+                    <% if (s.image) { %>
+                        <img class="table-thumb" src="/public/images/scenic/<%= s.image %>" alt="<%= s.scenic_name %>">
+                    <% } else { %>
+                        <span class="thumb-empty">暂无</span>
+                    <% } %>
+                </td>
                 <td><%= s.scenic_name %></td>
                 <td><%= s.location || '-' %></td>
                 <td><%= s.check_count %></td>
