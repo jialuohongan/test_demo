@@ -339,12 +339,27 @@ h4 { color: var(--red-dk); margin-bottom: 6px; }
 
 /* ========== 登录注册页面 ========== */
 .auth-bg {
-    background: linear-gradient(135deg, #8b0000, #b71c1c 50%, #d32f2f);
+    background: url('/public/images/login-bg.jpg') center center / cover no-repeat fixed;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     padding: 20px;
+    position: relative;
+}
+.auth-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(139, 0, 0, 0.35);
+    z-index: 0;
+}
+.auth-bg > * {
+    position: relative;
+    z-index: 1;
 }
 .auth-box {
     background: #fff;
