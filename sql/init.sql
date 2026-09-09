@@ -16,6 +16,10 @@ CREATE TABLE user (
     password          VARCHAR(100) NOT NULL COMMENT '密码(bcrypt)',
     security_question VARCHAR(100) DEFAULT NULL COMMENT '密保问题(找回密码用)',
     security_answer   VARCHAR(100) DEFAULT NULL COMMENT '密保答案',
+    real_name         VARCHAR(50)  DEFAULT NULL COMMENT '真实姓名',
+    gender            VARCHAR(10)  DEFAULT NULL COMMENT '性别',
+    phone             VARCHAR(20)  DEFAULT NULL COMMENT '电话号码',
+    location          VARCHAR(100) DEFAULT NULL COMMENT '所在地',
     score             INT          DEFAULT 0 COMMENT '学习积分,打卡+1/删除-1',
     register_time     DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';

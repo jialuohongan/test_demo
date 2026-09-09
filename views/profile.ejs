@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/public/css/style.css">
 </head>
 <body>
-<%- include('../_header') %>
+<%- include('_header') %>
 
 <div class="container">
     <% if (flash) { %>
@@ -20,6 +20,54 @@
         <p>账号：<strong><%= info.username %></strong></p>
         <p>学习积分：<span class="big-num"><%= info.score %></span></p>
         <p>注册时间：<%= info.register_time || '未知' %></p>
+    </div>
+
+    <div class="form-card">
+        <h3>完善个人资料</h3>
+        <form method="post" action="/profile/info">
+            <div class="form-row">
+                <label>真实姓名</label>
+                <input type="text" name="real_name" value="<%= info.real_name || '' %>" placeholder="请输入姓名" maxlength="50">
+            </div>
+            <div class="form-row">
+                <label>性别</label>
+                <select name="gender">
+                    <option value="" <%= info.gender ? '' : 'selected' %>>不透露</option>
+                    <option value="男" <%= info.gender === '男' ? 'selected' : '' %>>男</option>
+                    <option value="女" <%= info.gender === '女' ? 'selected' : '' %>>女</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>电话号码</label>
+                <input type="text" name="phone" value="<%= info.phone || '' %>" placeholder="11 位手机号" maxlength="11">
+            </div>
+            <div class="form-row">
+                <label>所在地</label>
+                <input type="text" name="location" value="<%= info.location || '' %>" placeholder="例：辽宁省大连市" maxlength="100">
+            </div>
+            <button class="btn">保存资料</button>
+        </form>
+    </div>
+
+    <div class="form-card">
+        <h3>修改密保问题</h3>
+        <p class="muted">当前密保：<%= info.security_question ? info.security_question : '未设置，建议设置以便找回密码' %></p>
+        <form method="post" action="/profile/security">
+            <div class="form-row">
+                <label>密保问题</label>
+                <select name="security_question" required>
+                    <option value="我的学校是" <%= info.security_question === '我的学校是' ? 'selected' : '' %>>我的学校是</option>
+                    <option value="我的家乡是" <%= info.security_question === '我的家乡是' ? 'selected' : '' %>>我的家乡是</option>
+                    <option value="我最喜欢的红色景点" <%= info.security_question === '我最喜欢的红色景点' ? 'selected' : '' %>>我最喜欢的红色景点</option>
+                    <option value="我母亲的名字" <%= info.security_question === '我母亲的名字' ? 'selected' : '' %>>我母亲的名字</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label>密保答案</label>
+                <input type="text" name="security_answer" placeholder="设置新的密保答案" required maxlength="100">
+            </div>
+            <button class="btn">更新密保</button>
+        </form>
     </div>
 
     <div class="form-card">
@@ -59,6 +107,6 @@
     </div>
 </div>
 
-<%- include('../_footer') %>
+<%- include('_footer') %>
 </body>
 </html>
