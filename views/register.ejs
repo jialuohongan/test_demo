@@ -29,6 +29,20 @@
             <label>确认密码</label>
             <input type="password" name="confirm" placeholder="再输一次" required>
         </div>
+        <div class="form-row">
+            <label>密保问题（忘记密码时用于找回，选填）</label>
+            <select name="security_question">
+                <option value="">不设置</option>
+                <option value="我的学校是">我的学校是</option>
+                <option value="我的家乡是">我的家乡是</option>
+                <option value="我最喜欢的红色景点">我最喜欢的红色景点</option>
+                <option value="我母亲的名字">我母亲的名字</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label>密保答案</label>
+            <input type="text" name="security_answer" placeholder="与上面问题配套填写" maxlength="100">
+        </div>
         <button class="btn btn-block" type="submit">注 册</button>
     </form>
 

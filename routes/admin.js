@@ -38,7 +38,7 @@ router.get('/dashboard', requireAdmin, async (req, res) => {
 // 查看所有用户
 router.get('/users', requireAdmin, async (req, res) => {
     const { keyword, id } = req.query;
-    let sql = 'SELECT user_id, username, score, register_time FROM user WHERE 1=1';
+    let sql = 'SELECT user_id, username, score, register_time, security_question FROM user WHERE 1=1';
     const params = [];
     if (keyword) {
         sql += ' AND username LIKE ?';
@@ -51,6 +51,35 @@ router.get('/users', requireAdmin, async (req, res) => {
     sql += ' ORDER BY user_id ASC';
     const list = await query(sql, params);
     res.render('admin/users', { title: '所有用户', list, query: { keyword, id } });
+});
+
+// 管理员为用户设置/重置密保问题（用于自助找回密码）
+router.post('/users/:id/security', requireAdmin, async (req, res) => {
+    const { security_question, security_answer } = req.body;
+    const userId = req.params.id;
+
+    if (!security_question || !security_answer) {
+        req.session.flash = { type: 'error', msg: '密保问题和答案都要填写' };
+        return res.redirect('/admin/users');
+    }
+
+    try {
+        const rows = await query('SELECT user_id FROM user WHERE user_id = ?', [userId]);
+        if (rows.length === 0) {
+            req.session.flash = { type: 'error', msg: '用户不存在' };
+            return res.redirect('/admin/users');
+        }
+        await query(
+            'UPDATE user SET security_question = ?, security_answer = ? WHERE user_id = ?',
+            [security_question, security_answer.trim(), userId]
+        );
+        req.session.flash = { type: 'success', msg: '密保设置成功，该用户现在可以自助找回密码了' };
+        res.redirect('/admin/users');
+    } catch (err) {
+        console.error(err);
+        req.session.flash = { type: 'error', msg: '设置失败：' + err.message };
+        res.redirect('/admin/users');
+    }
 });
 
 module.exports = router;

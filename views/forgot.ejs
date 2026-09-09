@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>找回密码 - 红色文化学习打卡系统</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body class="auth-bg">
+
+<div class="auth-box">
+    <h1><span class="brand-red">🟥</span> 找回密码</h1>
+
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
+    <% if (step === 'username') { %>
+        <p class="auth-sub">第一步：输入你的用户名</p>
+        <form action="/forgot/username" method="post">
+            <div class="form-row">
+                <label>用户名</label>
+                <input type="text" name="username" placeholder="请输入注册时的用户名" required>
+            </div>
+            <button class="btn btn-block" type="submit">下一步</button>
+        </form>
+    <% } else if (step === 'answer') { %>
+        <p class="auth-sub">第二步：回答密保问题</p>
+        <div class="forgot-question">🔒 <%= forgot_question %></div>
+        <form action="/forgot/answer" method="post">
+            <div class="form-row">
+                <label>密保答案</label>
+                <input type="text" name="answer" placeholder="请输入密保答案" required>
+            </div>
+            <button class="btn btn-block" type="submit">验证答案</button>
+        </form>
+    <% } else if (step === 'reset') { %>
+        <p class="auth-sub">第三步：设置新密码</p>
+        <form action="/forgot/reset" method="post">
+            <div class="form-row">
+                <label>新密码（至少 6 位）</label>
+                <input type="password" name="password" placeholder="请输入新密码" required minlength="6">
+            </div>
+            <div class="form-row">
+                <label>确认新密码</label>
+                <input type="password" name="confirm" placeholder="再输一次" required>
+            </div>
+            <button class="btn btn-block" type="submit">重置密码</button>
+        </form>
+    <% } %>
+
+    <p class="auth-link">
+        <a href="/forgot/cancel">返回登录</a> ｜
+        没有账号？<a href="/register">立即注册</a>
+    </p>
+
+    <div class="auth-hint">
+        <p>📌 测试账号找回方式：</p>
+        <p>用户名 test，密保问题"我的学校是"，答案：<b>dlou</b></p>
+    </div>
+</div>
+
+<%- include('_footer') %>
+</body>
+</html>

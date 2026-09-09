@@ -11,11 +11,13 @@ USE red_culture_checkin;
 -- 1. 用户表
 -- ----------------------------
 CREATE TABLE user (
-    user_id        INT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
-    username       VARCHAR(50)  UNIQUE NOT NULL COMMENT '用户名',
-    password       VARCHAR(100) NOT NULL COMMENT '密码(bcrypt)',
-    score          INT          DEFAULT 0 COMMENT '学习积分,打卡+1/删除-1',
-    register_time  DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间'
+    user_id           INT PRIMARY KEY AUTO_INCREMENT COMMENT '用户ID',
+    username          VARCHAR(50)  UNIQUE NOT NULL COMMENT '用户名',
+    password          VARCHAR(100) NOT NULL COMMENT '密码(bcrypt)',
+    security_question VARCHAR(100) DEFAULT NULL COMMENT '密保问题(找回密码用)',
+    security_answer   VARCHAR(100) DEFAULT NULL COMMENT '密保答案',
+    score             INT          DEFAULT 0 COMMENT '学习积分,打卡+1/删除-1',
+    register_time     DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
 -- ----------------------------
@@ -89,9 +91,9 @@ CREATE INDEX idx_record_time   ON check_in_record(check_time);
 INSERT INTO admin (username, password) VALUES
 ('admin', '$2a$10$BrPkPmR3HcDg28RrMaQJs.o0yqbXJMuUcDbVY7xKZoQ.jkLrGEJ9O');
 
--- 测试用户（密码 123456）
-INSERT INTO user (username, password, score) VALUES
-('test', '$2a$10$BrPkPmR3HcDg28RrMaQJs.o0yqbXJMuUcDbVY7xKZoQ.jkLrGEJ9O', 5);
+-- 测试用户（密码 123456，密保答案：dlou）
+INSERT INTO user (username, password, security_question, security_answer, score) VALUES
+('test', '$2a$10$BrPkPmR3HcDg28RrMaQJs.o0yqbXJMuUcDbVY7xKZoQ.jkLrGEJ9O', '我的学校是', 'dlou', 5);
 
 -- 示例公告
 INSERT INTO announcement (title, content, publish_date, remark) VALUES

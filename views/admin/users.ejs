@@ -14,6 +14,10 @@
         <span class="muted">共 <%= list.length %> 人</span>
     </div>
 
+    <% if (flash) { %>
+        <div class="flash flash-<%= flash.type %>"><%= flash.msg %></div>
+    <% } %>
+
     <form class="search-bar" method="get">
         <input type="text" name="keyword" value="<%= query.keyword || '' %>" placeholder="按用户名搜索">
         <input type="number" name="id" value="<%= query.id || '' %>" placeholder="按用户 ID">
@@ -28,11 +32,13 @@
                 <th>用户名</th>
                 <th>学习积分</th>
                 <th>注册时间</th>
+                <th>密保状态</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
         <% if (list.length === 0) { %>
-            <tr><td colspan="4" class="empty">无用户</td></tr>
+            <tr><td colspan="6" class="empty">无用户</td></tr>
         <% } %>
         <% list.forEach(function(u) { %>
             <tr>
@@ -40,6 +46,29 @@
                 <td>👤 <%= u.username %></td>
                 <td><strong><%= u.score %></strong></td>
                 <td><%= u.register_time || '-' %></td>
+                <td>
+                    <% if (u.security_question) { %>
+                        <span class="sec-ok">✔ 已设置</span>
+                    <% } else { %>
+                        <span class="sec-none">✘ 未设置</span>
+                    <% } %>
+                </td>
+                <td>
+                    <details class="sec-detail">
+                        <summary class="btn btn-sm btn-outline">设置密保</summary>
+                        <form class="sec-form" action="/admin/users/<%= u.user_id %>/security" method="post">
+                            <select name="security_question" required>
+                                <option value="">选择密保问题</option>
+                                <option value="我的学校是">我的学校是</option>
+                                <option value="我的家乡是">我的家乡是</option>
+                                <option value="我最喜欢的红色景点">我最喜欢的红色景点</option>
+                                <option value="我母亲的名字">我母亲的名字</option>
+                            </select>
+                            <input type="text" name="security_answer" placeholder="密保答案" required maxlength="100">
+                            <button class="btn btn-sm" type="submit">保存</button>
+                        </form>
+                    </details>
+                </td>
             </tr>
         <% }); %>
         </tbody>
