@@ -1,7 +1,7 @@
 /**
  * 路由：公告
  * 用户：查看全部 / 按标题查 / 按编号查
- * 管理员：增删改查
+ * 管理员：增删改查   *****
  */
 const express = require('express');
 const router = express.Router();
