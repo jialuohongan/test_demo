@@ -24,7 +24,7 @@ CREATE TABLE user (
     register_time     DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
--- 说明：系统仅 1 名管理员，不建表，账号密码固定在 config/admin.js（bcrypt 加密）
+-- 2.说明：系统仅 1 名管理员，不建表，账号密码固定在 config/admin.js（bcrypt 加密）
 
 -- ----------------------------
 -- 3. 公告表
