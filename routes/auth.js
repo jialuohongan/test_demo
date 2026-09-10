@@ -5,6 +5,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const { query } = require('../config/db');
+const adminConfig = require('../config/admin');
 
 // ===== 首页：登录跳转逻辑 =====
 router.get('/', (req, res) => {
@@ -28,17 +29,12 @@ router.post('/login', async (req, res) => {
 
     try {
         if (role === 'admin') {
-            const rows = await query('SELECT * FROM admin WHERE username = ?', [username]);
-            if (rows.length === 0) {
-                req.session.flash = { type: 'error', msg: '管理员账号不存在' };
+            // 系统仅 1 名管理员，不建表，账号密码固定在 config/admin.js
+            if (!adminConfig.verify(username, password)) {
+                req.session.flash = { type: 'error', msg: '管理员账号或密码错误' };
                 return res.redirect('/login');
             }
-            const ok = bcrypt.compareSync(password, rows[0].password);
-            if (!ok) {
-                req.session.flash = { type: 'error', msg: '密码错误' };
-                return res.redirect('/login');
-            }
-            req.session.admin = { admin_id: rows[0].admin_id, username: rows[0].username };
+            req.session.admin = { username: adminConfig.username };
             return res.redirect('/admin/dashboard');
         } else {
             const rows = await query('SELECT * FROM user WHERE username = ?', [username]);

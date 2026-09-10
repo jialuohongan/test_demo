@@ -24,14 +24,7 @@ CREATE TABLE user (
     register_time     DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '注册时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
 
--- ----------------------------
--- 2. 管理员表（系统仅 1 名管理员）
--- ----------------------------
-CREATE TABLE admin (
-    admin_id  INT PRIMARY KEY AUTO_INCREMENT COMMENT '管理员ID',
-    username  VARCHAR(50)  UNIQUE NOT NULL COMMENT '管理员账号',
-    password  VARCHAR(100) NOT NULL COMMENT '密码(bcrypt)'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员表';
+-- 说明：系统仅 1 名管理员，不建表，账号密码固定在 config/admin.js（bcrypt 加密）
 
 -- ----------------------------
 -- 3. 公告表
@@ -90,10 +83,6 @@ CREATE INDEX idx_record_time   ON check_in_record(check_time);
 -- ============================================================
 -- 初始数据
 -- ============================================================
-
--- 管理员账号： admin / 123456  (bcrypt 哈希值)
-INSERT INTO admin (username, password) VALUES
-('admin', '$2a$10$BrPkPmR3HcDg28RrMaQJs.o0yqbXJMuUcDbVY7xKZoQ.jkLrGEJ9O');
 
 -- 测试用户（密码 123456，密保答案：dlou）
 INSERT INTO user (username, password, security_question, security_answer, score) VALUES
