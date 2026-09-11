@@ -80,16 +80,10 @@ router.get('/detail/:id', requireUser, async (req, res) => {
             'SELECT COUNT(*) AS cnt FROM check_in_record WHERE scenic_id = ? AND user_id = ?',
             [id, req.session.user.user_id]
         );
-        // 关联的革命人物
-        const heroes = await query(
-            'SELECT name, intro, image FROM hero_figure WHERE scenic_id = ? ORDER BY hero_id ASC',
-            [id]
-        );
         res.render('scenic/detail', {
             title: rows[0].scenic_name,
             spot: rows[0],
             recent,
-            heroes,
             myCount: myCount[0].cnt
         });
     } catch (err) {
