@@ -1,0 +1,220 @@
+{
+  "info": {
+    "_postman_id": "red-culture-checkin-api-tests-2026",
+    "name": "红色文化学习打卡系统 - 接口测试集合",
+    "description": "对应《系统分析设计与实现文档》表4.1的 T1~T11 共 11 条接口测试用例。\n\n使用前请确认：\n1. 系统已启动（WebStorm 或命令行 node app.js）；\n2. 右上角环境变量 baseUrl 的端口与系统实际端口一致（默认 3000）；\n3. 请求设置里关闭「自动重定向」，否则看不到 302 状态码。\n\n执行顺序建议：T1 → T2 → T4 → T5 → T6 → T7 → T8 → T3 → T9 → T10 → T11，其中 T3、T9 需在退出登录状态下执行。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "T1 用户登录（正确凭据）",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "username", "value": "test" },
+            { "key": "password", "value": "123456" }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["login"]
+        },
+        "description": "测试内容：正确凭据登录\n预期结果：302 跳转登录后页面\n实际结果：302 → /scenic\n结论：通过\n\n注意：role 参数留空即为普通用户登录。"
+      },
+      "response": []
+    },
+    {
+      "name": "T2 用户登录（错误密码）",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "username", "value": "test" },
+            { "key": "password", "value": "wrongpwd" }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["login"]
+        },
+        "description": "测试内容：错误密码登录\n预期结果：拒绝并提示错误\n实际结果：302 → /login，flash 提示\n结论：通过\n\n截图要点：需能看到 302 状态码与 Location: /login 响应头，请先关闭「自动重定向」。"
+      },
+      "response": []
+    },
+    {
+      "name": "T4 注册新用户",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "username", "value": "apitest01" },
+            { "key": "password", "value": "123456" },
+            { "key": "confirm", "value": "123456" },
+            { "key": "security_question", "value": "我的初中班主任姓名" },
+            { "key": "security_answer", "value": "张老师" }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["register"]
+        },
+        "description": "测试内容：注册新用户\n预期结果：创建账号并跳转登录页\n实际结果：302 → /login\n结论：通过\n\n注意：用户名至少 3 位、密码至少 6 位、两次密码一致；密保问题和答案要么都填、要么都空。重复执行会因用户名已被占用而失败，可改用 apitest02、apitest03。"
+      },
+      "response": []
+    },
+    {
+      "name": "T5 查看景点列表（已登录）",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/scenic",
+          "host": ["{{baseUrl}}"],
+          "path": ["scenic"]
+        },
+        "description": "测试内容：已登录查看景点列表\n预期结果：200 正常渲染\n实际结果：200\n结论：通过\n\n前置条件：先执行 T1 登录成功，Apifox 会自动携带 Cookie。"
+      },
+      "response": []
+    },
+    {
+      "name": "T6 查看景点详情",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/scenic/detail/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["scenic", "detail", "1"]
+        },
+        "description": "测试内容：查看景点详情\n预期结果：200 正常渲染\n实际结果：200\n结论：通过\n\n前置条件：先执行 T1 登录成功。"
+      },
+      "response": []
+    },
+    {
+      "name": "T7 提交打卡（含心得）",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "scenic_id", "value": "1" },
+            { "key": "experience", "value": "接口自动化测试心得" }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/checkin",
+          "host": ["{{baseUrl}}"],
+          "path": ["checkin"]
+        },
+        "description": "测试内容：提交打卡（含心得）\n预期结果：JSON 打卡成功、积分加一\n实际结果：{\"code\":200,\"msg\":\"打卡成功\",\"data\":{\"check_id\":5,\"new_score\":6}}\n结论：通过\n\n注意：该接口返回 JSON，不是 302。返回体中的 check_id 会随打卡次数递增，后续 T8 删除打卡请使用本次返回的 check_id。"
+      },
+      "response": []
+    },
+    {
+      "name": "T8 删除打卡",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/checkin/delete/5",
+          "host": ["{{baseUrl}}"],
+          "path": ["checkin", "delete", "5"]
+        },
+        "description": "测试内容：删除打卡\n预期结果：记录删除、积分回退\n实际结果：302，数据回滚\n结论：通过\n\n注意：路径末尾的 5 是 check_id，请替换为 T7 实际返回的 check_id。"
+      },
+      "response": []
+    },
+    {
+      "name": "T3 未登录访问受保护页面",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/scenic",
+          "host": ["{{baseUrl}}"],
+          "path": ["scenic"]
+        },
+        "description": "测试内容：未登录访问受保护页面\n预期结果：302 跳转登录页\n实际结果：302 → /login\n结论：通过\n\n执行方式：在 Apifox 中新建标签页（不携带登录 Cookie）执行，或先访问 /logout 退出登录。"
+      },
+      "response": []
+    },
+    {
+      "name": "T9 普通用户越权访问后台",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/dashboard",
+          "host": ["{{baseUrl}}"],
+          "path": ["admin", "dashboard"]
+        },
+        "description": "测试内容：普通用户越权访问后台\n预期结果：302 拒绝\n实际结果：302\n结论：通过\n\n前置条件：当前会话必须是普通用户登录态（执行 T1 后的状态），不能是管理员。"
+      },
+      "response": []
+    },
+    {
+      "name": "T10 管理员登录",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "username", "value": "admin" },
+            { "key": "password", "value": "123456" },
+            { "key": "role", "value": "admin" }
+          ]
+        },
+        "url": {
+          "raw": "{{baseUrl}}/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["login"]
+        },
+        "description": "测试内容：管理员登录\n预期结果：302 跳转后台\n实际结果：302 → /admin/dashboard\n结论：通过\n\n注意：role 参数必须为 admin，否则系统会按普通用户去查 user 表。管理员账号固定为 admin/123456，不存数据库。"
+      },
+      "response": []
+    },
+    {
+      "name": "T11 管理员查看仪表盘",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/dashboard",
+          "host": ["{{baseUrl}}"],
+          "path": ["admin", "dashboard"]
+        },
+        "description": "测试内容：管理员查看仪表盘\n预期结果：200 正常渲染\n实际结果：200\n结论：通过\n\n前置条件：先执行 T10 管理员登录成功。"
+      },
+      "response": []
+    }
+  ]
+}
