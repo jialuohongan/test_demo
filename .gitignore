@@ -17,3 +17,6 @@ Thumbs.db
 
 # 上传文件
 public/img/uploads/
+
+# Office 临时锁文件
+~$*
